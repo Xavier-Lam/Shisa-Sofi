@@ -1,0 +1,25 @@
+{
+    "name": "shisa/sofi",
+    "description": "A slim framework scaffold project.",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Shisa\\Sofi\\": "src/Sofi/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Xavier-Lam",
+            "email": "xavierlam7@hotmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.11",
+        "php-di/slim-bridge": "^3.3",
+        "symfony/console": "^6.2",
+        "akrabat/ip-address-middleware": "^2.1",
+        "slim/psr7": "^1.6",
+        "boronczyk/localization-middleware": "^2.0"
+    }
+}
