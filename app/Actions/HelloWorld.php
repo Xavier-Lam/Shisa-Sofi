@@ -14,7 +14,8 @@ final class HelloWorld extends Action
         $args
     ): Response {
         $name = $args['name'] ?: 'Shisa';
-        $response->getBody()->write("Hello, $name");
+        $message = sprintf(_("Hello, %s"), $name);
+        $response->getBody()->write($message);
         return $response;
     }
 }

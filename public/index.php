@@ -2,9 +2,6 @@
 
 namespace App;
 
-use App\Application\ApplicationFactory;
-use App\Application\ConsoleFactory;
-
 error_reporting(0);
 
 // The root directory of your project.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application;
+namespace App;
 
 use Psr\Container\ContainerInterface;
 use Shisa\Sofi\Application\ConsoleFactory as Base;

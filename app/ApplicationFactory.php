@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application;
+namespace App;
 
 use Boronczyk\LocalizationMiddleware;
 use Psr\Container\ContainerInterface as Container;
@@ -19,10 +19,23 @@ class ApplicationFactory extends Base
      */
     protected static function configureContainer(App $app, Container $container)
     {
+        $configuration = $container->get(Configuration::class);
+
         $container->has(ResponseFactoryInterface::class)
             || $container->set(
                 ResponseFactory::class,
                 $app->getResponseFactory()
+            );
+
+        $configuration->i18n->enabled
+            && $container->set(
+                LocalizationMiddleware::class,
+                static function (Configuration $configuration) {
+                    return new LocalizationMiddleware(
+                        $configuration->i18n->locales,
+                        $configuration->i18n->locales[0]
+                    );
+                }
             );
     }
 
@@ -31,20 +44,22 @@ class ApplicationFactory extends Base
      */
     protected static function configureMiddlewares(App $app, Container $container)
     {
-        $debugMode = $container->get(Configuration::class)->debug;
+        $configuration = $container->get(Configuration::class);
 
         $app->add(BodyParsingMiddleware::class);
         $app->addRoutingMiddleware();
-        $app->addErrorMiddleware($debugMode, true, true);
+        $app->addErrorMiddleware($configuration->debug, true, true);
 
-        // // Retrieving locale preference from client
-        // $app->add(LocalizationMiddleware::class);
+        // Retrieving locale preference from client
+        $configuration->i18n->enabled
+            && $app->add(LocalizationMiddleware::class);
 
         // Retrieving IP address from client
         $app->add(IpAddress::class);
 
         // Allowing only accessing by designated hosts when not in debug mode.
-        !$debugMode && $app->add(SafeHostRequestMiddleware::class);
+        !$configuration->debug
+            && $app->add(SafeHostRequestMiddleware::class);
     }
 
     /**
@@ -52,6 +67,6 @@ class ApplicationFactory extends Base
      */
     protected static function registerRoutes(App $app, Container $container)
     {
-        $app->get('/hello/[{name}/]', \App\Actions\HelloWorld::class);
+        $app->get('/hello/[{name}/]', Actions\HelloWorld::class);
     }
 }
